@@ -157,13 +157,10 @@ func do() {
 
 		appCfr := podCfr.AppConfigurator("sysinner-pgsql-*")
 		if appCfr == nil {
-			appCfr = podCfr.AppConfigurator("sysinner-postgresql-*")
-			if appCfr == nil {
-				hlog.Print("error", "No AppSpec (sysinner-pgsql) Found")
-				return
-			}
+			hlog.Print("error", "No AppSpec (sysinner-pgsql) Found")
+			return
 		}
-		if appCfg = appCfr.AppConfigQuery("cfg/sysinner-pgsql", "cfg/sysinner-postgresql"); appCfg == nil {
+		if appCfg = appCfr.AppConfigQuery("cfg/sysinner-pgsql"); appCfg == nil {
 			hlog.Print("error", "No AppSpec (sysinner-pgsql) Found")
 			return
 		}
@@ -214,7 +211,7 @@ func do() {
 
 		ram_pc = (cfg_next.Resource.Ram * ram_pc) / 100
 		if offset := ram_pc % pg_mem_min; offset > 0 {
-			ram_pc += offset
+			ram_pc -= offset
 		}
 		if ram_pc < pg_mem_min {
 			ram_pc = pg_mem_min
@@ -498,7 +495,7 @@ func init_user() error {
 
 	for _, v := range cfg_next.Users {
 
-		if prev := cfg_last.UserGet(v.Name); prev == nil {
+		if prev := cfg_last.UserGet(v.Name); prev == nil || prev.Auth != v.Auth {
 
 			cmd := exec.Command("/bin/bash")
 			stdin, err := cmd.StdinPipe()
