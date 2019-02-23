@@ -7,7 +7,7 @@ groups = dev/db
 description = configuration management tool for PostgreSQL
 
 %build
-PREFIX="{{.project__prefix}}"
+PREFIX="/opt/postgresql/keeper"
 
 mkdir -p {{.buildroot}}/{bin,log}
 

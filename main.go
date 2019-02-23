@@ -37,7 +37,6 @@ import (
 var (
 	pg_rel     = "96"
 	pg_rels    = types.ArrayString([]string{"95", "96", "10", "11"})
-	pg_prefix  = "/home/action/apps/postgresql"
 	pg_mem_min = int32(16) // in MiB
 	mu         sync.Mutex
 	cfg_mu     sync.Mutex
@@ -46,12 +45,16 @@ var (
 	pgPodCfr   *inconf.PodConfigurator
 )
 
-func pg_path(path string) string {
-	return filepath.Clean("/home/action/apps/postgresql/" + path)
+func pgkeeper_path(path string) string {
+	return filepath.Clean("/opt/postgresql/keeper/" + path)
 }
 
 func pgrel_path(path string) string {
-	return filepath.Clean("/home/action/apps/postgresql" + pg_rel + "/" + path)
+	return filepath.Clean("/opt/postgresql/postgresql" + pg_rel + "/" + path)
+}
+
+func pg_prefix() string {
+	return "/opt/postgresql/postgresql" + pg_rel
 }
 
 type EnvConfig struct {
@@ -289,7 +292,7 @@ func init_conf() error {
 	//
 	ram := int(cfg_next.Resource.Ram)
 	sets := map[string]interface{}{
-		"project_prefix": pg_prefix,
+		"project_prefix": pg_prefix(),
 		"env_ram_size":   fmt.Sprintf("%dM", ram),
 		// "server_key_buffer_size":         fmt.Sprintf("%dM", ram/4),
 		// "server_query_cache_size":        fmt.Sprintf("%dM", ram/8),
@@ -298,13 +301,13 @@ func init_conf() error {
 
 	if !cfg_last.Inited || cfg_last.Resource.Ram != cfg_next.Resource.Ram {
 
-		if err := filerender.Render(pg_path("misc/"+pg_rel+"/postgresql.conf.sample"),
+		if err := filerender.Render(pgkeeper_path("misc/"+pg_rel+"/postgresql.conf.sample"),
 			pgrel_path("data/postgresql.conf"),
 			0644, sets); err != nil {
 			return err
 		}
 
-		if err := filerender.Render(pg_path("misc/"+pg_rel+"/pg_hba.conf.sample"),
+		if err := filerender.Render(pgkeeper_path("misc/"+pg_rel+"/pg_hba.conf.sample"),
 			pgrel_path("data/pg_hba.conf"),
 			0644, sets); err != nil {
 			return err
