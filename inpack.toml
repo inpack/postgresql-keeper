@@ -1,0 +1,18 @@
+[project]
+name = "postgresql-keeper"
+version = "0.9.6"
+vendor = "sysinner.com"
+homepage = "https://www.sysinner.com"
+description = "configuration management tool for PostgreSQL"
+groups = ["dev/db"]
+
+[files]
+allow = """misc/
+README.md
+LICENSE"""
+
+[scripts]
+build = """PREFIX=\"/opt/postgresql/keeper\"
+mkdir -p {{.buildroot}}/{bin,log}
+go build -ldflags \"-w -s\" -o {{.buildroot}}/bin/postgresql-keeper main.go
+"""

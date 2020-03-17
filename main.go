@@ -278,7 +278,7 @@ func do() {
 		return
 	}
 
-	hlog.Printf("info", "setup in %v", time.Since(tstart))
+	hlog.Printf("debug", "setup in %v", time.Since(tstart))
 
 	pgPodCfr = podCfr
 }
@@ -365,8 +365,6 @@ func start() error {
 
 	mu.Lock()
 	defer mu.Unlock()
-
-	hlog.Printf("info", "start()")
 
 	if !cfg_last.Inited {
 		return errors.New("No Init")
