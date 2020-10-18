@@ -36,7 +36,7 @@ import (
 
 var (
 	pg_rel     = "96"
-	pg_rels    = types.ArrayString([]string{"95", "96", "10", "11"})
+	pg_rels    = types.ArrayString([]string{"95", "96", "10", "11", "12", "13"})
 	pg_mem_min = int32(16) // in MiB
 	mu         sync.Mutex
 	cfg_mu     sync.Mutex
@@ -116,6 +116,8 @@ func main() {
 
 	if v, ok := hflag.ValueOK("pg_rel"); ok && pg_rels.Has(v.String()) {
 		pg_rel = v.String()
+	} else {
+		//
 	}
 
 	for {
@@ -512,8 +514,8 @@ func init_user() error {
 				io.WriteString(stdin, cmd_str)
 			}()
 
-			if _, err = cmd.CombinedOutput(); err != nil {
-				hlog.Printf("error", "set user %s %s", err.Error(), cmd_str)
+			if out, err := cmd.CombinedOutput(); err != nil {
+				hlog.Printf("error", "set user %s %s, output %s", err.Error(), cmd_str, string(out))
 				return err
 			}
 

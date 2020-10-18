@@ -1,18 +1,20 @@
 [project]
 name = "postgresql-keeper"
-version = "0.9.6"
+version = "0.10.0"
 vendor = "sysinner.com"
 homepage = "https://www.sysinner.com"
 description = "configuration management tool for PostgreSQL"
 groups = ["dev/db"]
 
 [files]
-allow = """misc/
+allow = """
+misc/
 README.md
 LICENSE"""
 
 [scripts]
-build = """PREFIX=\"/opt/postgresql/keeper\"
+  build = """
+PREFIX="/opt/postgresql/keeper"
 mkdir -p {{.buildroot}}/{bin,log}
-go build -ldflags \"-w -s\" -o {{.buildroot}}/bin/postgresql-keeper main.go
+CGO_ENABLED=0 go build -a -ldflags "-w -s" -o {{.buildroot}}/bin/postgresql-keeper main.go
 """
