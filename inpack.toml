@@ -1,6 +1,6 @@
 [project]
 name = "postgresql-keeper"
-version = "0.10.0"
+version = "0.10.1"
 vendor = "sysinner.com"
 homepage = "https://www.sysinner.com"
 description = "configuration management tool for PostgreSQL"

@@ -361,6 +361,7 @@ func init_datadir() error {
 
 func clean_runlock() {
 	os.Remove(pgrel_path("postmaster.pid"))
+	os.Remove(pgrel_path("data/postmaster.pid"))
 }
 
 func start() error {
